@@ -68,7 +68,7 @@ Seluruh perhitungan dilakukan di **level database** (tanpa looping PHP) dengan d
 ## Setup & Menjalankan Project
 
 ### 1) Clone Repository
-git clone https://github.com/MrKhairy03/Trackify.git
+git clone https://github.com/MrKhairy03/Aplikasi_Trackify.git
 cd Trackify
 
 
