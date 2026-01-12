@@ -1,59 +1,155 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Trackify (Laravel) — Activity Analytics Dashboard
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Trackify adalah aplikasi *activity analytics dashboard* berbasis **Laravel** untuk mencatat dan menganalisis aktivitas pengguna secara **realtime**.  
+Sistem ini merekam aktivitas seperti **login, logout, akses halaman, dan filter data**, lalu menyajikannya dalam bentuk **dashboard analitik** berupa *statistic cards, area chart, pie chart, dan progress bar*.
 
-## About Laravel
+Seluruh perhitungan dilakukan di **level database** (tanpa looping PHP) dengan dukungan **filter rentang waktu dan action**, sehingga efisien, scalable, dan siap digunakan sebagai sistem monitoring aktivitas pengguna.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Activity Logging (Realtime)
+- Pencatatan aktivitas pengguna secara otomatis:
+  - `login`
+  - `logout`
+  - `view_dashboard`
+  - `view_activities`
+  - `filter_dashboard`
+- Logging dilakukan secara terpusat menggunakan:
+  - Service (`ActivityLogger`)
+  - Event Listener (Login & Logout)
+  - Middleware (View halaman)
+- Mekanisme anti-duplicate logging untuk mencegah event tercatat ganda.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Dashboard Analitik
+- **Statistic Cards**
+  - Total Activities
+  - Total Active Users
+  - Total Action Types
+  - Aktivitas terbanyak oleh user
+- **Area Chart**
+  - Total activity per hari
+  - Default 7 hari terakhir
+  - Menyesuaikan filter rentang waktu
+- **Pie Chart**
+  - Top 5 user paling aktif
+  - Berdasarkan jumlah aktivitas
+- **Progress Bar**
+  - Top 3 action terbanyak
+  - Persentase dihitung dari total activity
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+### Filtering & Analisis
+- Filter berdasarkan:
+  - Rentang waktu (`from` – `to`)
+  - Action (opsional)
+- Semua filter memengaruhi:
+  - Statistic cards
+  - Area chart
+  - Pie chart
+  - Progress bar
+- Seluruh perhitungan dilakukan di query database (GROUP BY, COUNT).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Teknologi
+- Laravel 12
+- PHP 8+
+- MySQL / MariaDB
+- Bootstrap (SB Admin 2 Template)
+- Chart.js
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## Setup & Menjalankan Project
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1) Clone Repository
+git clone https://github.com/MrKhairy03/Trackify.git
+cd Trackify
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2) Install Dependency
+composer install
+npm install
+npm run build
 
-## Security Vulnerabilities
+### 3) Buat Environment
+cp .env.example .env
+php artisan key:generate
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4) Konfigurasi Database
+DB_DATABASE=trackify
+DB_USERNAME=root
+DB_PASSWORD=
 
-## License
+### 5) Migrasi & Seeder
+php artisan migrate --seed
+Seeder akan menyiapkan:
+- User dummy
+- Data aktivitas (±10.000 data)
+- Berbagai jenis action untuk kebutuhan analitik
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 6) Jalankan Aplikasi
+php artisan serve
+
+---
+
+## Struktur Project
+
+- `app/Http/Controllers/`
+  - `DashboardController.php` → statistik, filter, chart, progress bar
+  - `ActivitiesController.php` → list data aktivitas
+- `app/Models/`
+  - `Activities.php` → model aktivitas + relasi  `user`
+- `app/Services/`
+  - `ActivityLogger.php` → service logging terpusat
+- `app/Listeners/`
+  - `LogLoginActivity.php`
+  - `LogLogoutActivity.php`
+- `app/Http/Middleware/`
+  - `LogViewActivity.php`
+- `resources/views/environments/`
+  - `dashboard/` → halaman utama, dashboard analitik
+  - `activities` → halaman data aktivitas
+- `public/assets/js/dashboard/`
+  - `chart-area.js/`
+  - `chart-pie.js/`
+
+---
+
+## Business Rule (Ringkas)
+
+- Semua aktivitas dicatat otomatis tanpa manual insert di controller
+- Login & Logout dicatat melalui event listener
+- Akses halaman dicatat melalui middleware
+- Filter dashboard dicatat saat query parameter digunakan
+- Seluruh statistik dihitung di level database
+- Duplicate logging dicegah menggunakan cache singkat
+
+---
+
+## Testing & Analisis
+
+### Skenario Pengujian
+- Login user → activity login tercatat
+- Akses dashboard → view_dashboard tercatat
+- Menggunakan filter → filter_dashboard tercatat
+- Akses halaman activities → view_activities tercatat
+- Logout user → logout tercatat
+- Refresh halaman → tidak terjadi duplicate log
+
+### Verifikasi Data
+- php artisan tinker
+- App\Models\Activities::latest()->take(10)->get();
+
+---
+
+## Catatan Teknis
+
+- Project ini menggunakan pendekatan service + event + middleware
+- Logging dibuat terpusat agar mudah dikembangkan dan tidak mencemari business logic
+- Struktur siap untuk dikembangkan ke skala analitik yang lebih besar
