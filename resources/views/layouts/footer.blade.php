@@ -2,10 +2,10 @@
     <div class="container my-auto">
         <div class="text-center my-auto">
             <div class="small">
-                &copy; {{ date('Y') }} <b>Sekolah App</b> — Sistem Informasi Sekolah
+                &copy; {{ date('Y') }} <b>Trackify</b> — Activity Analytics Dashboard
             </div>
             <div class="small text-muted">
-                Akses Admin • Manajemen Data Siswa, Guru, dan Kelas
+                Monitoring Aktivitas Pengguna • Statistik • Insight
             </div>
         </div>
     </div>
