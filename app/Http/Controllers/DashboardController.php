@@ -5,12 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Activities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Services\ActivityLogger;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        if (
+            $request->filled('from') ||
+            $request->filled('to') ||
+            $request->filled('action')
+        ) {
+            ActivityLogger::log('filter_dashboard');
+        }
+
         $from   = $request->input('from', now()->subDays(7)->startOfDay());
         $to = $request->filled('to') ? Carbon::parse($request->to)->endOfDay() : now()->endOfDay();
         $action = $request->input('action');
