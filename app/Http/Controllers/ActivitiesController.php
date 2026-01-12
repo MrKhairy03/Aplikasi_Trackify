@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 
 class ActivitiesController extends Controller
 {
-    /**
-     * Menampilkan data aktivitas (read-only)
-     */
     public function index(Request $request)
     {
         $activities = Activities::with('user')
